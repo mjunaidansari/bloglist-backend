@@ -1,0 +1,10 @@
+POST z
+
+Content-Type: application/json
+
+{
+    "title": "abcdef",
+    "author": "abc",
+    "url": "abc", 
+    "likes": 6
+}
