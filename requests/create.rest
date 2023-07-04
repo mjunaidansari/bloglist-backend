@@ -1,10 +1,11 @@
-POST z
-
+POST http://localhost:3002/api/blogs
 Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imp1bmFpZCIsImlkIjoiNjRhMmVlN2VlZjk4MmEwYzllMDc4NWM5IiwiaWF0IjoxNjg4NDgzNTIxLCJleHAiOjE2ODg0ODcxMjF9.-UqjAN0CjqULkpDEFZxZLG6Qbrk7luYRLNeTVKHJ5N8
 
 {
-    "title": "abcdef",
+    "title": "hehe created",
     "author": "abc",
     "url": "abc", 
-    "likes": 6
+    "likes": 6,
+    "user": "64a2ee7eef982a0c9e0785c9"
 }
