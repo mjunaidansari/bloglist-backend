@@ -1,9 +1,9 @@
 POST http://localhost:3002/api/blogs
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imp1bmFpZCIsImlkIjoiNjRhMmVlN2VlZjk4MmEwYzllMDc4NWM5IiwiaWF0IjoxNjg4NDgzNTIxLCJleHAiOjE2ODg0ODcxMjF9.-UqjAN0CjqULkpDEFZxZLG6Qbrk7luYRLNeTVKHJ5N8
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjY0YTJlZTkwZWY5ODJhMGM5ZTA3ODVjZCIsImlhdCI6MTY4ODU0MjQ0OCwiZXhwIjoxNjg4NTQ2MDQ4fQ.fLvHGl4nV4fgD7Q0WJKbeIixuISuuL3_Ptv5QLPNN1A
 
 {
-    "title": "hehe created",
+    "title": "another one",
     "author": "abc",
     "url": "abc", 
     "likes": 6,

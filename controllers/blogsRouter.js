@@ -45,29 +45,16 @@ blogsRouter.get('/:id', async (request, response, next) => {
 })
 
 // creating a blog
-
-// isolates token from authorization header
-// const getTokenFrom = request => {
-//     const authorization = request.get('authorization')
-//     console.log(authorization)
-//     if(authorization && authorization.startsWith('bearer '))
-//         return authorization.replace('bearer ', '')
-//     return null
-// }
-
 blogsRouter.post('/', async (request, response, next) => {
     const body = request.body
+    const user = request.user
 
-    // const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET)
-    const decodedToken = jwt.verify(request.token, process.env.SECRET)
-    if(!decodedToken)
+    if(!user)
         return response
             .status(401)
             .json({
-                error: 'invalid token!'
+                error: 'invalid user!'
             })
-
-    const user = await User.findById(decodedToken.id)
 
     const blog = new Blog({
         title: body.title,
@@ -92,8 +79,31 @@ blogsRouter.post('/', async (request, response, next) => {
 })
 
 blogsRouter.delete('/:id', async (request, response, next) =>  {
-    const id = request.params.id
     
+    const decodedToken = jwt.verify(request.token, process.env.SECRET)
+
+    const user = request.user
+
+    if(!user)
+        return response
+            .status(401)
+            .json({
+                error: 'invalid user!'
+            })
+
+    const blog = await Blog.findById(request.params.id)
+
+    if(blog.user.toString() === user._id.toString()) {
+        await Blog.findByIdAndRemove(request.params.id)
+        response.status(204).end()
+    } else {
+        response
+            .status(401)
+            .json({
+                error: 'Invalid User'
+            })
+    }
+
     // Blog
     //     .findByIdAndRemove(id)
     //     .then(result => {
@@ -101,9 +111,6 @@ blogsRouter.delete('/:id', async (request, response, next) =>  {
     //         response.status(204).end()
     //     })
     //     .catch(error => next(error))
-
-    await Blog.findByIdAndRemove(id)
-    response.status(204).end()
 })
 
 blogsRouter.put('/:id', async (request, response, next) => {

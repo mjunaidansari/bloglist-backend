@@ -13,8 +13,25 @@ const api = supertest(app)
 // MongoDb model for db interaction
 const Blog = require('../models/blog')
 
+let token = null
+
+
+beforeAll(async () => {
+
+    await Blog.deleteMany({})
+
+    const user = {
+        username: 'junaid',
+        password: 'hehe'
+    }
+
+    const response = await api
+                        .post('/api/login')
+                        .send(user)
+    token = response._body.token
+})
 // executed before execution of each test
-beforeEach( async () => {
+/* beforeEach( async () => {
     await Blog.deleteMany({})
 
     const blogObjects = helper.initialBlogs.map (
@@ -24,10 +41,11 @@ beforeEach( async () => {
     // array of promises that will be executed as a single promise
     const promiseArray = blogObjects.map(blog => blog.save())
     await Promise.all(promiseArray)
-})
+    console.log(response)
+}) */
 
 test('blogs are returned as json', async () => {
-    await api 
+    await api
         .get('/api/blogs')
         .expect(200)
         .expect('Content-Type', /application\/json/)
@@ -52,7 +70,8 @@ test('a valid blog is added successfully', async () => {
     await api
         .post('/api/blogs')
         .send(newBlog)
-        .expect(200)
+        .set({authorization: `Bearer ${token}`})
+        .expect(201)
         .expect('Content-Type', /application\/json/)
 
     const blogsAtEnd = await helper.blogsInDb()
@@ -60,6 +79,27 @@ test('a valid blog is added successfully', async () => {
 
     const titles = blogsAtEnd.map(blog => blog.title)
     expect(titles).toContain(newBlog.title)
+})
+
+test('blog without token fails with proper status code 401', async () => {
+    
+    const blogsAtStart = await helper.blogsInDb()
+    
+    const newBlog = {
+        title: "Type wars",
+        author: "Robert C. Martin",
+        url: "http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html",
+        likes: 2,
+    }
+
+    await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(401)
+        .expect('Content-Type', /application\/json/)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    expect(blogsAtEnd.length).toEqual(blogsAtStart.length)
 })
 
 test('if the likes property is missing from the request, it defaults to 0', async () => {
@@ -75,7 +115,8 @@ test('if the likes property is missing from the request, it defaults to 0', asyn
     await api
         .post('/api/blogs')
         .send(newBlog)
-        .expect(200)
+        .set({authorization: `Bearer ${token}`})
+        .expect(201)
         .expect('Content-Type', /application\/json/)
 
     const blogsAtEnd = await helper.blogsInDb()
@@ -93,6 +134,7 @@ test('blog without title or url is not added in db', async () => {
     await api
         .post('/api/blogs')
         .send(newBlog)
+        .set({authorization: `Bearer ${token}`})
         .expect(400)
 
     const blogsAtEnd = await helper.blogsInDb()
