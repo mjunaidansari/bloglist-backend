@@ -80,7 +80,7 @@ blogsRouter.post('/', async (request, response, next) => {
 
 blogsRouter.delete('/:id', async (request, response, next) =>  {
     
-    const decodedToken = jwt.verify(request.token, process.env.SECRET)
+    // const decodedToken = jwt.verify(request.token, process.env.SECRET)
 
     const user = request.user
 
