@@ -8,7 +8,8 @@
     "dev": "cross-env NODE_ENV=development nodemon index.js",
     "test": "cross-env NODE_ENV=test jest --verbose --runInBand",
     "build:ui": "@powershell Remove-Item -Recurse -Force build && cd ../bloglist && npm run build && @powershell Copy-Item build -Recurse ../bloglist-backend",
-    "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push"
+    "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push",
+    "start:test": "cross-env NODE_ENV=test node index.js"
   },
   "author": "Junaid Ansari",
   "license": "ISC",
